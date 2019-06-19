@@ -55,7 +55,32 @@ enum TransitStatus {
 }
 
 
+
 asset Product identified by productName{
+  o String productName
+  --> Product ProductType
+  o String productDimension
+  o String productDescription
+
+}
+
+asset Bank_Product identified by productName{
+  o String productName
+  --> Product ProductType
+  o String productDimension
+  o String productDescription
+
+}
+
+asset Farm_Produce identified by productName{
+  o String productName
+  --> Product ProductType
+  o String productDimension
+  o String productDescription
+
+}
+
+asset Construction_Product identified by productName{
   o String productName
   --> Product ProductType
   o String productDimension
@@ -131,30 +156,50 @@ abstract participant Industry identified by companyName {
   o Address address
   o SubParticipantType SubParticipantType
   o Personel Personel
-  //--> Account[] accounts 
+  --> Account[] accounts 
   
 }
 
 /**
- * A Pharmaceutical is a type of participant in the network
+ * Pharmaceutical is an industry in the network
  */
 participant Pharmaceutical extends Industry {
 }
 
 /**
- * A Banking is a type of participant in the network
+ * Banking is an industry in the network
  */
 participant Banking extends Industry {
 }
 
 /**
- * An Construction is a type of participant in the network
+ * Construction is an industry in the network
  */
 participant Construction extends Industry {
 }
 
+/**
+ * Farming is an industry in the network
+ */
+participant Farming extends Industry {
+}
+
+/**
+ * Government is an industry in the network
+ */
+participant Government extends Industry {
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 //TRANSACTIONS
+concept Transport{
+  o String companyName
+  o String companyID optional
+  o String driverName
+  o String vehicleType
+  o String vehicleID
+  o String companyPhone optional
+}
 
 transaction AccountTransaction {
   o Double amount
@@ -189,5 +234,6 @@ transaction TransitDispatch{
   o Personel Dispatching_personel
   --> Industry Destination_Company
   o Address Destination_Address
+  o Transport distributor
  
 }
