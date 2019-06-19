@@ -1,0 +1,193 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * A business network for trading and delivering multi-industry goods
+ * The cargo is temperature controlled and contracts
+ * can be negotiated based on the temperature
+ * readings received for the cargo
+ */
+
+namespace org.multichain
+////////////////////////////////////////////////////////////////////////////////////
+//ASSET DEFINITIONS
+/**
+ * The type of product being delivered
+ */
+enum ProductType{
+  	o BAGS
+    o BALES
+    o BANANAS
+    o BARRELS
+    o BOXES
+    o CEMENT_BAGS
+    o CONTAINERS
+    o CRATES
+    o DRUMS
+    o EQUIPMENT
+    o KEGS
+    o MEDICINE
+    o ORGAN 
+    o PARCELS
+    o SACKS
+    o TRAILERS
+}
+
+/**
+ * The status of a transit
+ */
+enum TransitStatus {
+  o CREATED
+  o IN_STORAGE
+  o IN_TRANSIT
+  o ARRIVED
+}
+
+
+asset Product identified by productName{
+  o String productName
+  --> Product ProductType
+  o String productDimension
+  o String productDescription
+
+}
+
+asset Account identified by accountID {
+  o String accountID
+  -->Industry accountOwner //revise the definition
+  o Double balance
+  o AccountTransaction[] transactions optional
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+//PARTICIPANT DEFINITIONS
+ 
+/**
+ * The type of perishable product being delivered
+ */
+enum SubParticipantType {
+  o BANK
+  o CLIENT
+  o CONSUMER
+  o CUSTOMER
+  o CONTRACTOR
+  o DISTRIBUTOR
+  o FARMER
+  o GROWER
+  o HOSPITAL
+  o MANUFACTURER
+  o MARKET
+  o PATIENT
+  o PHARMACY
+  o PROCESSOR
+  o PRODUCER
+  o RETAILER
+  o SUPERMARKET
+  o TREASURY
+  o WAREHOUSE
+}
+/**
+ * A concept for a simple street address
+ */
+concept Address {
+  o String country
+  o String city
+  o String street
+  o String building optional
+  o String floor optional
+}
+/**
+ * A concept for sub-participant
+ */
+concept Personel {
+  o String employeeName
+  o String employeeID
+  o String employeeEmail
+  o String companyID optional
+  o String companyPhone optional
+
+}
+
+/**
+ * An abstract participant type in this business network
+ */
+abstract participant Industry identified by companyName {
+  o String companyName
+  o String companyID
+  o String companyEmail
+  o String companyPhone
+  o Address address
+  o SubParticipantType SubParticipantType
+  o Personel Personel
+  //--> Account[] accounts 
+  
+}
+
+/**
+ * A Pharmaceutical is a type of participant in the network
+ */
+participant Pharmaceutical extends Industry {
+}
+
+/**
+ * A Banking is a type of participant in the network
+ */
+participant Banking extends Industry {
+}
+
+/**
+ * An Construction is a type of participant in the network
+ */
+participant Construction extends Industry {
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+//TRANSACTIONS
+
+transaction AccountTransaction {
+  o Double amount
+  o String Operation
+  --> Account account
+  --> Industry account_owner
+}
+
+
+/**
+ * A notification that a transit has been received by the
+ * importer and that funds should be transferred from the receiver
+ * to the dispatcher to pay for the transit.
+ */
+transaction TransitReceive  {
+   --> Product product_name
+   o Double unitCount
+   --> Industry ReceivedFrom_companyName
+   o Address ReceivedFrom
+   o Personel Dispatching_personel
+
+}
+
+/**
+ * A notification that a Transit has been received by the
+ * receiver and that funds should be transferred from the receiver
+ * to the dispatcher to pay for the transit.
+ */
+transaction TransitDispatch{
+  --> Product product_name
+  o Double unitCount
+  o Personel Dispatching_personel
+  --> Industry Destination_Company
+  o Address Destination_Address
+ 
+}
