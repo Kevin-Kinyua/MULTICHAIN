@@ -80,35 +80,36 @@ async function dispatch(transitDispatch) {  // eslint-disable-line no-unused-var
  */
 
 // Update on progess regarding this
-function execTransaction(transaction) {   
+function execTransaction(accountTransaction) {   
 
-    console.log("FUND TRANSACTION", transaction);      //CONSOLE TOTEM TEST
+    console.log("FUND TRANSACTION", accountTransaction);      //CONSOLE TOTEM TEST
     
     // initialize array of transactions if none exist
 
-    if(transaction.account.transactions == null) {
-        transaction.account.transactions = [];
+    if(accountTransaction.account.transactions == null) {
+        accountTransaction.account.transactions = [];
     }
 
     // determine whether this is a deposit, withdrawal or transfer and execute accordingly
 
-    if(transaction.operation == 'Withdraw') {
-        transaction.industry.account.balance -= transaction.amount;
-    } else if(transaction.operation == 'Deposit') {
-        transaction.industry.account.balance += transaction.amount;
+    if(accountTransaction.operation == 'Withdraw') {
+        accountTransaction.Industry.account.balance -= accountTransaction.amount;
+    } else if(accountTransaction.operation == 'Deposit') {
+        accountTransaction.Industry.account.balance += accountTransaction.amount;
     }
-
-    //define soon
+  
+  	//define soon
     // else if (transaction.operation == 'Transfer'){
     //     transaction.Industry.account.balance -= transaction.amount;
     // }
 
+
     // add the current transaction to the bank account's transaction history
-    transaction.account.transactions.push(transaction);
+    accountTransaction.account.transactions.push(accountTransaction);
 
     //update the registry (undefined)
-    return getAssetRegistry('org.multichain.participant.Account')
+    return getAssetRegistry('org.multichain.Account')
     .then(function(regAccount) {
-        return regAccount.update(transaction.participant.Account);
+        return regAccount.update(accountTransaction.Account);
     });
 }
