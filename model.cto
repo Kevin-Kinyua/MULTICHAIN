@@ -54,13 +54,27 @@ enum TransitStatus {
   o ARRIVED
 }
 
-
+asset Account identified by accountID {
+  o String accountID
+  -->Industry accountOwner //revise the definition
+  o Double balance
+  o AccountTransaction[] transactions optional
+    
+}
 
 asset Product identified by productName{
   o String productName
   --> Product ProductType
   o String productDimension
   o String productDescription
+
+}
+
+asset Government_Asset identified by assetName{
+  o String assetName
+  --> Product assetType
+  o String assetDimension
+  o String assetDescription
 
 }
 
@@ -87,15 +101,6 @@ asset Construction_Product identified by productName{
   o String productDescription
 
 }
-
-asset Account identified by accountID {
-  o String accountID
-  -->Industry accountOwner //revise the definition
-  o Double balance
-  o AccountTransaction[] transactions optional
-    
-}
-
 ////////////////////////////////////////////////////////////////////////////////////
 //PARTICIPANT DEFINITIONS
  
@@ -231,8 +236,8 @@ transaction TransitReceive  {
 transaction TransitDispatch{
   --> Product product_name
   o Double unitCount
-  o Personel Dispatching_personel
   --> Industry Destination_Company
+  o Personel Dispatching_personel
   o Address Destination_Address
   o Transport distributor
  
